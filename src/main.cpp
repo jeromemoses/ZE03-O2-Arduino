@@ -103,7 +103,7 @@ float read_O2(float *gas_con)
      *gas_con = *gas_con * 0.1;
    } 
 
-   */debug code -> to print received bytes into serial monitor
+   /*debug code -> to print received bytes into serial monitor*/
    for(byte j = 0;j<9;j++)
    {
      Serial.print(O2_received_bytes[j]); //Prints received byte from O2 sensor response
