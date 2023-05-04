@@ -44,18 +44,18 @@ void setup() {
   Serial.println();
 }
 
-unsigned char FucCheckSum(unsigned char *i,unsigned char ln)
-{
-  unsigned char j,tempq=0;
-  i+=1;
-  for(j=0;j<(ln-2);j++)
-    {
-      tempq+=*i;
-      i++;
-    }
-  tempq=(~tempq)+1;
-  return(tempq);
-}
+// unsigned char FucCheckSum(unsigned char *i,unsigned char ln)
+// {
+//   unsigned char j,tempq=0;
+//   i+=1;
+//   for(j=0;j<(ln-2);j++)
+//     {
+//       tempq+=*i;
+//       i++;
+//     }
+//   tempq=(~tempq)+1;
+//   return(tempq);
+// }
 
 
 void loop() {
