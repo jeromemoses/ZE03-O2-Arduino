@@ -18,51 +18,38 @@ void setup() {
   O2_serial.begin(sensor_baud_rate);  //Initialise Uart communication with O2 sensor
   pinMode(LED1, OUTPUT); //declaring esp32 inbuilt led pin as output
 
-  // for(int i = 0;i<9;i++)
-  // {
-  //   O2_serial.write(O2_qa_mode[i]); //sends command to o2 sensor to initialise in QnA mode
-  // }
-  // delay(1000);
+  delay(1000);
 
   O2_serial.write(O2_qa_mode, sizeof(O2_qa_mode));
+  delay(250);
   O2_serial.readBytes(O2_received_bytes, sizeof(O2_received_bytes));
-  for (int i = 0; i < 8; i++)
+  
+  
+  //prints the received bytes in serial monitor
+  for (int i = 0; i <= 8; i++)
   {
     Serial.print(O2_received_bytes[i], HEX); Serial.print(" ");
   }
-  Serial.println(O2_received_bytes[8], HEX);
+  Serial.println();
 
-  Serial.println("Sensor is booting Please wait a minute");
-
+  //sensor booting section
+  Serial.println("Sensor is booting Please wait");
   int bootUP_time = 0;
-  while(bootUP_time != 60)
+  while(bootUP_time != 10)
   {
     Serial.print(".");
     delay(1000);
     bootUP_time += 1;
   }
   Serial.println();
+
 }
-
-// unsigned char FucCheckSum(unsigned char *i,unsigned char ln)
-// {
-//   unsigned char j,tempq=0;
-//   i+=1;
-//   for(j=0;j<(ln-2);j++)
-//     {
-//       tempq+=*i;
-//       i++;
-//     }
-//   tempq=(~tempq)+1;
-//   return(tempq);
-// }
-
 
 void loop() {
 
   delay(1840);
 
-  // O2_serial.write(O2_read, sizeof(O2_qa_mode));
+  // O2_serial.write(O2_read, sizeof(O2_read));
   // O2_serial.readBytes(O2_received_bytes, sizeof(O2_received_bytes));
   // float O2 = O2_received_bytes[2] * 256 + O2_received_bytes[3]; 
   // Serial.printf("Raw O2 : %f",O2);
@@ -94,22 +81,18 @@ float read_O2(float *gas_con)
 {
    if(O2_serial.write(O2_read,sizeof(O2_read)) == 9) //send O2 read command to o2 sensor and checks whether it id fully sent
    {
-    for(byte i = 0;i<9;i++)
-    {
-      O2_received_bytes[i] = O2_serial.read(); //Reads sensor response bytes and store it in a array
-    }
-
-     *gas_con = O2_received_bytes[2] * 256 + O2_received_bytes[3]; //Substituting sensor responses to the gas concentration formula
-     *gas_con = *gas_con * 0.1;
+    delay(250);
+    O2_serial.readBytes(O2_received_bytes, sizeof(O2_received_bytes));
+    *gas_con = O2_received_bytes[2] * 256 + O2_received_bytes[3]; //Substituting sensor responses to the gas concentration formula
+    *gas_con = *gas_con * 0.1;
    } 
 
-   /*debug code -> to print received bytes into serial monitor*/
+   /* //debug code -> to print received bytes into serial monitor */
    for(byte j = 0;j<9;j++)
    {
      Serial.print(O2_received_bytes[j]); //Prints received byte from O2 sensor response
      Serial.print(" ");
    }
-  Serial.println();  
-
-   return *gas_con; //returns the gas concentration of O2
+  Serial.println();  // */
+  return *gas_con; //returns the gas concentration of O2
 }
